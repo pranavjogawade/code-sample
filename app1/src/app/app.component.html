@@ -1,25 +1,11 @@
 <div class="container">
-  <div class="row header">
-    <div class="col-sm-6">
-      Logo
-    </div>
-    <div class="col-sm-6">
-      Menu
-    </div>
-  </div>
-  <div class="row main-content">
-    <div class="col-sm-12">
-      <h3>Add Article</h3>
-      <br />
+    <div class="row">
+      <form [formGroup]="myForm" (ngSubmit)="onSubmit(myForm.value)" class="form-control">
+        <label for="sku">SKU</label>
+        <input type="text" name="sku" [formControl]="myForm.controls['sku']">
 
-      <label for="title">Label:</label>
-      <input type="text" class="form-control" name="title" [(ngModel)]="title" #newTitle>
-      <br />
-      <label for="link">Link:</label>
-      <input type="text" class="form-control" name="link" [(ngModel)]="link" #newLink>
-
-      <br/>
-      <button (click)="addArticle(newTitle, newLink)" class="button btn btn-primary">Add</button>
+        <button class="button btn btn-primary" type="submit">Submit</button>
+      </form>
     </div>
-  </div>
 </div>
+
