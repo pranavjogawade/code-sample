@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from './product.model'
+import { Product } from './product.model';
+import { ProductService } from './product.service';
 @Component({
   selector: 'product-list',
   templateUrl: './product-list.component.html',
@@ -10,7 +11,7 @@ export class ProductListComponent implements OnInit {
 	products: Product[];
 	filteredProducts: Product[];
 	showImage: boolean = false;
-
+	errorMessage: string = '';
 	_listFilter: string;
 	get listFilter(): string {
 		return this._listFilter;
@@ -19,31 +20,7 @@ export class ProductListComponent implements OnInit {
 		this._listFilter = value;
 		this.filteredProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
 	}
-	constructor() {
-		this.products = [
-			{
-				productId: 2,
-				productName: 'Garden Cart',
-				productCode: 'DFD-234',
-				releaseDate: 'March 18, 2020',
-				description: 'Test Description of product',
-				price: 54.52,
-				starRating: 4.2,
-				imageUrl: 'assets/images/garden.jpeg'
-			},
-			{
-				productId: 3,
-				productName: 'Hammer Cart',
-				productCode: 'HAM-234',
-				releaseDate: 'Feb 18, 2020',
-				description: 'Test Description of product',
-				price: 65.552,
-				starRating: 3.2,
-				imageUrl: 'assets/images/hammer.jpeg'
-			}
-		];
-		this.filteredProducts = this.products;
-		this.listFilter = 'cart';
+	constructor(private productService: ProductService) {
 	}
 	toggleImage(): void {
 		this.showImage = !this.showImage;
@@ -54,6 +31,13 @@ export class ProductListComponent implements OnInit {
 		product.productName.toLocaleLowerCase().indexOf(filterBy) !== -1);
 	}
 	ngOnInit() {
+		this.productService.getProducts().subscribe({
+			next: products => {
+				this.products = products;
+				this.filteredProducts = this.products},
+			error: err => this.errorMessage = err
+		});
+
 	}
 	onNotify(message: string): void {
 		this.pageTitle = 'Product List' + message;
